@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clinical Systems Adoption Plan — Alicia Paulson</title>
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --teal-900: #003d3b;
+      --teal-800: #005754;
+      --teal-700: #00736d;
+      --teal-600: #009088;
+      --teal-500: #00ada3;
+      --teal-400: #2dc4ba;
+      --teal-300: #6dd9d3;
+      --teal-100: #d0f4f2;
+      --teal-50:  #e8faf9;
+      --amber:    #f59e0b;
+      --rose:     #f43f5e;
+      --indigo:   #6366f1;
+      --green:    #10b981;
+      --slate-900:#0f172a;
+      --slate-700:#334155;
+      --slate-500:#64748b;
+      --slate-300:#cbd5e1;
+      --slate-100:#f1f5f9;
+      --white:    #ffffff;
+      --radius:   14px;
+      --shadow:   0 4px 24px rgba(0,109,104,.13);
+      --shadow-lg:0 12px 48px rgba(0,109,104,.18);
+    }
+
+    /* ─── RESET & BASE ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: var(--slate-700);
+      background: var(--white);
+      line-height: 1.7;
+    }
+    h1,h2,h3,h4 { font-weight: 700; color: var(--teal-900); line-height: 1.3; }
+    a { color: var(--teal-600); text-decoration: none; }
+    img { max-width: 100%; }
+
+    /* ─── NAV ───────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(0,61,59,.92);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 1200px; margin: auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-weight: 800; font-size: 1rem; color: var(--teal-300);
+      letter-spacing: .03em;
+    }
+    .nav-links {
+      display: flex; gap: 1.6rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: .82rem; font-weight: 600;
+      color: rgba(255,255,255,.75);
+      text-transform: uppercase; letter-spacing: .07em;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--teal-300); }
+
+    /* ─── HERO ──────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--teal-900) 0%, var(--teal-700) 60%, var(--teal-500) 100%);
+      color: var(--white);
+      padding: 100px 2rem 80px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px;
+      padding: .3rem 1.1rem;
+      font-size: .78rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 1.4rem;
+      color: var(--teal-100);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      color: var(--white);
+      max-width: 820px; margin: 0 auto 1rem;
+    }
+    .hero-sub {
+      font-size: 1.1rem; color: rgba(255,255,255,.8);
+      max-width: 620px; margin: 0 auto 2.4rem;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+      font-size: .85rem; color: rgba(255,255,255,.65);
+    }
+    .hero-meta span { display: flex; align-items: center; gap: .4rem; }
+
+    /* ─── SECTION WRAPPER ───────────────────────────────────── */
+    .section {
+      max-width: 1100px; margin: auto;
+      padding: 80px 2rem;
+    }
+    .section-label {
+      font-size: .75rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--teal-500);
+      margin-bottom: .6rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      max-width: 720px;
+      font-size: 1.05rem; color: var(--slate-500);
+      margin-bottom: 2.8rem;
+      line-height: 1.8;
+    }
+    .divider {
+      width: 56px; height: 4px;
+      background: linear-gradient(90deg, var(--teal-500), var(--teal-300));
+      border-radius: 2px; margin-bottom: 1.6rem;
+    }
+
+    .bg-light { background: var(--teal-50); }
+    .bg-dark  { background: var(--teal-900); color: var(--white); }
+    .bg-dark .section-title { color: var(--white); }
+    .bg-dark .section-desc  { color: rgba(255,255,255,.7); }
+    .bg-dark .section-label { color: var(--teal-300); }
+
+    /* ─── STAT CARDS ────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.4rem;
+      margin-bottom: 3rem;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--teal-100);
+      border-radius: var(--radius);
+      padding: 1.8rem 1.4rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .stat-icon {
+      font-size: 2rem; margin-bottom: .5rem;
+    }
+    .stat-value {
+      font-size: 2.4rem; font-weight: 800;
+      color: var(--teal-700);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: .82rem; color: var(--slate-500);
+      margin-top: .4rem;
+    }
+    .stat-delta {
+      display: inline-block; margin-top: .5rem;
+      font-size: .75rem; font-weight: 700;
+      padding: .15rem .55rem;
+      border-radius: 99px;
+    }
+    .delta-bad  { background: #fef2f2; color: var(--rose); }
+    .delta-good { background: #ecfdf5; color: var(--green); }
+
+    /* ─── DEPT TABLE ────────────────────────────────────────── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2.4rem;
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      background: var(--white);
+      font-size: .93rem;
+    }
+    thead { background: var(--teal-800); color: var(--white); }
+    thead th {
+      padding: .9rem 1.1rem; text-align: left;
+      font-size: .78rem; letter-spacing: .06em; text-transform: uppercase;
+    }
+    tbody tr:nth-child(even) { background: var(--teal-50); }
+    tbody td { padding: .8rem 1.1rem; border-bottom: 1px solid var(--teal-100); }
+    tbody tr:last-child td { border-bottom: none; }
+    .compliance-bar {
+      display: flex; align-items: center; gap: .7rem;
+    }
+    .bar-track {
+      flex: 1; height: 8px; background: var(--slate-300);
+      border-radius: 4px; overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%; border-radius: 4px;
+      transition: width 1.2s ease;
+    }
+    .bar-high { background: var(--green); }
+    .bar-med  { background: var(--amber); }
+    .bar-low  { background: var(--rose); }
+    .bar-pct  { font-weight: 700; font-size: .88rem; min-width: 34px; }
+
+    /* ─── ROOT CAUSE FINDINGS ───────────────────────────────── */
+    .findings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.4rem;
+    }
+    .finding-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border-left: 4px solid var(--teal-500);
+      padding: 1.5rem 1.6rem;
+      box-shadow: var(--shadow);
+      transition: border-color .2s, transform .25s;
+    }
+    .finding-card:hover { border-color: var(--teal-400); transform: translateY(-3px); }
+    .finding-card:nth-child(2) { border-color: var(--amber); }
+    .finding-card:nth-child(3) { border-color: var(--rose); }
+    .finding-card:nth-child(4) { border-color: var(--indigo); }
+    .finding-card:nth-child(5) { border-color: var(--teal-300); }
+    .finding-num {
+      font-size: .72rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--teal-500); margin-bottom: .4rem;
+    }
+    .finding-card:nth-child(2) .finding-num { color: var(--amber); }
+    .finding-card:nth-child(3) .finding-num { color: var(--rose); }
+    .finding-card:nth-child(4) .finding-num { color: var(--indigo); }
+    .finding-card:nth-child(5) .finding-num { color: var(--teal-400); }
+    .finding-title { font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+    .finding-text  { font-size: .9rem; color: var(--slate-500); }
+
+    /* ─── 4-PILLAR FRAMEWORK ─────────────────────────────────── */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.4rem;
+    }
+    .pillar-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      padding: 2rem 1.6rem;
+      position: relative; overflow: hidden;
+      transition: background .25s, transform .25s;
+    }
+    .pillar-card:hover { background: rgba(255,255,255,.12); transform: translateY(-4px); }
+    .pillar-num {
+      font-size: 5rem; font-weight: 900;
+      position: absolute; top: -10px; right: 16px;
+      color: rgba(255,255,255,.06);
+      line-height: 1; pointer-events: none;
+    }
+    .pillar-icon { font-size: 2.2rem; margin-bottom: .8rem; }
+    .pillar-days {
+      font-size: .72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--teal-300);
+      margin-bottom: .5rem;
+    }
+    .pillar-name { font-size: 1.35rem; color: var(--white); margin-bottom: .6rem; }
+    .pillar-goal { font-size: .88rem; color: rgba(255,255,255,.65); margin-bottom: 1.2rem; }
+    .pillar-actions { list-style: none; }
+    .pillar-actions li {
+      font-size: .84rem; color: rgba(255,255,255,.8);
+      padding: .35rem 0;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display: flex; gap: .6rem; align-items: flex-start;
+    }
+    .pillar-actions li::before { content: '→'; color: var(--teal-400); flex-shrink: 0; }
+
+    /* ─── TIMELINE / ACTIONS ─────────────────────────────────── */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+      width: 2px; background: linear-gradient(180deg, var(--teal-400), var(--teal-100));
+      border-radius: 1px;
+    }
+    .tl-item {
+      position: relative; margin-bottom: 2.4rem;
+    }
+    .tl-dot {
+      position: absolute; left: -2rem; top: 5px;
+      width: 16px; height: 16px;
+      background: var(--teal-500); border: 3px solid var(--white);
+      border-radius: 50%; box-shadow: 0 0 0 2px var(--teal-300);
+    }
+    .tl-meta {
+      font-size: .74rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--teal-500); margin-bottom: .3rem;
+    }
+    .tl-title { font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem; }
+    .tl-body  { font-size: .9rem; color: var(--slate-500); }
+    .tl-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .7rem; }
+    .chip {
+      font-size: .74rem; font-weight: 600;
+      padding: .25rem .7rem; border-radius: 99px;
+    }
+    .chip-teal   { background: var(--teal-100); color: var(--teal-800); }
+    .chip-amber  { background: #fef3c7; color: #92400e; }
+    .chip-green  { background: #dcfce7; color: #14532d; }
+    .chip-indigo { background: #ede9fe; color: #3730a3; }
+
+    /* ─── SESSIONS TABLE ─────────────────────────────────────── */
+    .sessions-table thead { background: var(--teal-600); }
+
+    /* ─── RESISTANCE ARCHETYPES ─────────────────────────────── */
+    .archetypes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.4rem;
+    }
+    .archetype-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--teal-500);
+      transition: transform .25s;
+    }
+    .archetype-card:nth-child(2) { border-color: var(--amber); }
+    .archetype-card:nth-child(3) { border-color: var(--rose); }
+    .archetype-card:hover { transform: translateY(-3px); }
+    .archetype-icon { font-size: 2.5rem; margin-bottom: .7rem; }
+    .archetype-label {
+      font-size: .72rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--teal-500); margin-bottom: .3rem;
+    }
+    .archetype-card:nth-child(2) .archetype-label { color: var(--amber); }
+    .archetype-card:nth-child(3) .archetype-label { color: var(--rose); }
+    .archetype-quote {
+      font-size: 1rem; font-style: italic; font-weight: 600;
+      color: var(--teal-900); margin-bottom: .7rem;
+    }
+    .archetype-strategy { font-size: .9rem; color: var(--slate-500); }
+
+    /* ─── KPI / PROGRESS ─────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.4rem;
+    }
+    .kpi-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      box-shadow: var(--shadow);
+    }
+    .kpi-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .kpi-name { font-size: .93rem; font-weight: 700; }
+    .kpi-baseline {
+      font-size: .78rem; color: var(--slate-500); font-weight: 600;
+    }
+    .kpi-targets {
+      display: flex; gap: .4rem; margin-bottom: .8rem;
+    }
+    .kpi-target {
+      flex: 1; text-align: center;
+      background: var(--teal-50); border-radius: 8px; padding: .45rem .2rem;
+    }
+    .kpi-target-day  { font-size: .68rem; color: var(--teal-600); font-weight: 700; letter-spacing: .06em; }
+    .kpi-target-val  { font-size: .9rem; font-weight: 800; color: var(--teal-800); }
+    .kpi-progress { position: relative; }
+    .kpi-track {
+      height: 10px; background: var(--slate-100);
+      border-radius: 5px; overflow: hidden;
+    }
+    .kpi-fill {
+      height: 100%; border-radius: 5px;
+      background: linear-gradient(90deg, var(--teal-500), var(--teal-300));
+      transition: width 1.4s ease;
+    }
+    .kpi-goal { font-size: .75rem; color: var(--slate-500); margin-top: .4rem; text-align: right; }
+
+    /* ─── STAKEHOLDER TABLE ─────────────────────────────────── */
+    .stakeholder-table thead { background: var(--teal-700); }
+    .tag {
+      display: inline-block;
+      font-size: .72rem; font-weight: 700;
+      padding: .2rem .55rem; border-radius: 99px;
+      background: var(--teal-100); color: var(--teal-800);
+      margin: .15rem;
+    }
+
+    /* ─── APPENDIX / ACCORDION ──────────────────────────────── */
+    .accordion { display: flex; flex-direction: column; gap: 1rem; }
+    .acc-item {
+      background: var(--white);
+      border: 1px solid var(--teal-100);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .acc-header {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 1.2rem 1.6rem;
+      display: flex; align-items: center; justify-content: space-between;
+      text-align: left;
+      transition: background .2s;
+    }
+    .acc-header:hover { background: var(--teal-50); }
+    .acc-title { font-size: 1rem; font-weight: 700; color: var(--teal-900); }
+    .acc-icon {
+      font-size: 1.3rem; color: var(--teal-500);
+      transition: transform .3s;
+    }
+    .acc-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .45s ease;
+      padding: 0 1.6rem;
+    }
+    .acc-body-inner { padding: .8rem 0 1.6rem; }
+    .acc-item.open .acc-icon { transform: rotate(45deg); }
+    .acc-item.open .acc-body { max-height: 2000px; }
+
+    /* ─── QUICK REF GRID ─────────────────────────────────────── */
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .qr-card {
+      background: var(--teal-50);
+      border-radius: 10px; padding: 1rem 1.1rem;
+      border: 1px solid var(--teal-100);
+    }
+    .qr-num {
+      font-size: .72rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--teal-500);
+    }
+    .qr-issue { font-size: .88rem; font-weight: 700; margin: .3rem 0; }
+    .qr-fix   { font-size: .82rem; color: var(--slate-500); }
+
+    /* ─── SURVEY ─────────────────────────────────────────────── */
+    .survey-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .survey-item {
+      background: var(--teal-50); border: 1px solid var(--teal-100);
+      border-radius: 10px; padding: 1rem 1.2rem;
+      display: flex; gap: .8rem; align-items: flex-start;
+    }
+    .survey-q-num {
+      flex-shrink: 0; width: 28px; height: 28px;
+      background: var(--teal-600); color: var(--white);
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: .78rem; font-weight: 800;
+    }
+    .survey-q-text { font-size: .88rem; color: var(--slate-700); }
+
+    /* ─── BMC ALIGNMENT ─────────────────────────────────────── */
+    .align-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+    .align-card {
+      text-align: center; padding: 2rem 1.4rem;
+      background: var(--white);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      border-top: 4px solid var(--teal-400);
+      transition: transform .25s;
+    }
+    .align-card:hover { transform: translateY(-4px); }
+    .align-icon { font-size: 2.4rem; margin-bottom: .7rem; }
+    .align-title { font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+    .align-text  { font-size: .86rem; color: var(--slate-500); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      background: var(--teal-900); color: rgba(255,255,255,.55);
+      text-align: center; padding: 2.4rem 1rem;
+      font-size: .85rem;
+    }
+    footer strong { color: var(--teal-300); }
+
+    /* ─── UTILITIES ──────────────────────────────────────────── */
+    .text-center { text-align: center; }
+    .mt-2 { margin-top: .5rem; }
+    .mt-4 { margin-top: 1rem; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero { padding: 70px 1rem 60px; }
+      .section { padding: 56px 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ══════════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Alicia Paulson · Clinical Systems Adoption</div>
+    <ul class="nav-links">
+      <li><a href="#situation">Situation</a></li>
+      <li><a href="#plan">90-Day Plan</a></li>
+      <li><a href="#stakeholders">Stakeholders</a></li>
+      <li><a href="#kpis">KPIs</a></li>
+      <li><a href="#bmc">BMC Fit</a></li>
+      <li><a href="#appendix">Appendix</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-badge">Work Sample · Boston Medical Center Candidate</div>
+  <h1>Clinical Systems Adoption Plan<br>Epic EHR Post-Live Recovery</h1>
+  <p class="hero-sub">A structured 90-day roadmap to close adoption gaps, rebuild workforce confidence, and embed a self-sustaining EHR culture at Boston Metro Health.</p>
+  <div class="hero-meta">
+    <span>📋 Prepared by Alicia Paulson</span>
+    <span>🏥 600-Bed Urban Academic Medical Center</span>
+    <span>📅 April 2026 · Six Weeks Post Go-Live</span>
+    <span>📄 14-Page Work Sample</span>
+  </div>
+</header>
+
+<!-- ═══ EXECUTIVE SNAPSHOT ═══════════════════════════════════ -->
+<section id="situation">
+  <div class="section">
+    <div class="section-label">Executive Summary</div>
+    <h2 class="section-title">The Adoption Gap Is Real — and Actionable</h2>
+    <div class="divider"></div>
+    <p class="section-desc">
+      Six weeks after Boston Metro Health's Phase 1 Epic go-live, adoption metrics reveal a stark two-tier pattern.
+      Structured inpatient units are performing reasonably well, while high-acuity, fast-paced departments are
+      significantly lagging — with help desk volume running <strong>3× the projected post-go-live baseline</strong>.
+    </p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🏥</div>
+        <div class="stat-value">600</div>
+        <div class="stat-label">Bed Urban Academic Medical Center</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-value">47%</div>
+        <div class="stat-label">ED Workflow Compliance</div>
+        <span class="stat-delta delta-bad">Target: 80%</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📉</div>
+        <div class="stat-value">51%</div>
+        <div class="stat-label">Oncology Compliance</div>
+        <span class="stat-delta delta-bad">Target: 82%</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎫</div>
+        <div class="stat-value">278</div>
+        <div class="stat-label">Help Desk Tickets / Week</div>
+        <span class="stat-delta delta-bad">3× projected baseline</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">82%</div>
+        <div class="stat-label">Med/Surg Compliance (Best)</div>
+        <span class="stat-delta delta-good">On track</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔁</div>
+        <div class="stat-value">58%</div>
+        <div class="stat-label">Tickets Are Duplicate Issues</div>
+        <span class="stat-delta delta-bad">Same 12 workflows</span>
+      </div>
+    </div>
+
+    <!-- Dept table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th>Workflow Compliance</th>
+            <th>Avg. Doc Time</th>
+            <th>Open Tickets</th>
+            <th>Super Users Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Medical / Surgical (3 units)</strong></td>
+            <td>
+              <div class="compliance-bar">
+                <div class="bar-track"><div class="bar-fill bar-high" style="width:82%"></div></div>
+                <span class="bar-pct" style="color:var(--green)">82%</span>
+              </div>
+            </td>
+            <td>14 min/patient</td>
+            <td>31</td>
+            <td>9 of 10</td>
+          </tr>
+          <tr>
+            <td><strong>Emergency Department</strong></td>
+            <td>
+              <div class="compliance-bar">
+                <div class="bar-track"><div class="bar-fill bar-low" style="width:47%"></div></div>
+                <span class="bar-pct" style="color:var(--rose)">47%</span>
+              </div>
+            </td>
+            <td>28 min/patient</td>
+            <td>87</td>
+            <td>3 of 12</td>
+          </tr>
+          <tr>
+            <td><strong>Oncology</strong></td>
+            <td>
+              <div class="compliance-bar">
+                <div class="bar-track"><div class="bar-fill bar-low" style="width:51%"></div></div>
+                <span class="bar-pct" style="color:var(--rose)">51%</span>
+              </div>
+            </td>
+            <td>22 min/patient</td>
+            <td>63</td>
+            <td>4 of 8</td>
+          </tr>
+          <tr>
+            <td><strong>Outpatient Primary Care</strong></td>
+            <td>
+              <div class="compliance-bar">
+                <div class="bar-track"><div class="bar-fill bar-med" style="width:74%"></div></div>
+                <span class="bar-pct" style="color:var(--amber)">74%</span>
+              </div>
+            </td>
+            <td>16 min/patient</td>
+            <td>42</td>
+            <td>7 of 10</td>
+          </tr>
+          <tr>
+            <td><strong>Surgical Services</strong></td>
+            <td>
+              <div class="compliance-bar">
+                <div class="bar-track"><div class="bar-fill bar-med" style="width:68%"></div></div>
+                <span class="bar-pct" style="color:var(--amber)">68%</span>
+              </div>
+            </td>
+            <td>18 min/patient</td>
+            <td>55</td>
+            <td>5 of 9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Root Causes -->
+    <div class="section-label" style="margin-top:3rem">Root Cause Analysis</div>
+    <h3 class="section-title" style="font-size:1.6rem;margin-bottom:1.6rem">5 Key Findings From the Field</h3>
+    <div class="findings-grid">
+      <div class="finding-card">
+        <div class="finding-num">Finding 1</div>
+        <div class="finding-title">Training Design Mismatch</div>
+        <div class="finding-text">The 8-hour linear classroom model did not reflect the interrupt-driven, multi-patient reality of ED workflows. Staff felt underprepared for real-world conditions.</div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-num">Finding 2</div>
+        <div class="finding-title">Super User Attrition</div>
+        <div class="finding-text">In the ED, 9 of 12 designated super users have returned to full clinical assignments. Only 3 remain — collapsing the first line of informal peer support.</div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-num">Finding 3</div>
+        <div class="finding-title">Workaround Proliferation</div>
+        <div class="finding-text">6 of 10 Oncology nurses developed paper/whiteboard workarounds for medication reconciliation — creating a patient safety risk and degrading data quality.</div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-num">Finding 4</div>
+        <div class="finding-title">Physician Engagement Gap</div>
+        <div class="finding-text">In 12 observed interactions, 7 involved verbal orders entered by nurses on behalf of physicians — distorting the audit trail and increasing nursing burden by ~35%.</div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-num">Finding 5</div>
+        <div class="finding-title">Mobile Access Barriers</div>
+        <div class="finding-text">Oncology has 6 workstations-on-wheels for 22 nurses per shift. This hardware constraint is the second most cited adoption barrier — and is actively driving workarounds.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 90-DAY PLAN ═══════════════════════════════════════════ -->
+<div class="bg-dark" id="plan">
+  <div class="section">
+    <div class="section-label">90-Day Intervention Plan</div>
+    <h2 class="section-title">Four Pillars. One Goal: Sustainable Adoption.</h2>
+    <div class="divider"></div>
+    <p class="section-desc">Each pillar builds on the last — moving from immediate friction reduction through to a self-sustaining adoption culture that doesn't depend on constant specialist presence.</p>
+
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-num">1</div>
+        <div class="pillar-icon">🛡️</div>
+        <div class="pillar-days">Days 1 – 30</div>
+        <h3 class="pillar-name">Stabilize</h3>
+        <p class="pillar-goal">Reduce help desk volume by 40% and restore staff confidence with on-the-ground presence.</p>
+        <ul class="pillar-actions">
+          <li>Super User Reactivation (4 hrs/wk protected schedule)</li>
+          <li>10-Day At-the-Elbow Support Surge in ED &amp; Oncology</li>
+          <li>Self-Service Knowledge Base — top 12 repeat topics</li>
+        </ul>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">2</div>
+        <div class="pillar-icon">🔧</div>
+        <div class="pillar-days">Days 15 – 45</div>
+        <h3 class="pillar-name">Reinforce</h3>
+        <p class="pillar-goal">Close foundational training gaps via role-specific micro-learning and physician engagement.</p>
+        <ul class="pillar-actions">
+          <li>20-Min Micro-Learning Sprint Series at shift transitions</li>
+          <li>1:1 Physician Optimization + Dragon Voice Dictation</li>
+          <li>Workaround Elimination: Understand → Match → Demonstrate</li>
+        </ul>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">3</div>
+        <div class="pillar-icon">⚡</div>
+        <div class="pillar-days">Days 30 – 75</div>
+        <h3 class="pillar-name">Optimize</h3>
+        <p class="pillar-goal">Drive efficiency gains through personal workspace tuning, data feedback, and specialty reviews.</p>
+        <ul class="pillar-actions">
+          <li>Epic "15-Minute Tune-Up" per staff member</li>
+          <li>Biweekly Adoption Dashboard for managers</li>
+          <li>Oncology Specialty Workflow Optimization Review</li>
+        </ul>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-num">4</div>
+        <div class="pillar-icon">🌱</div>
+        <div class="pillar-days">Days 60 – 90</div>
+        <h3 class="pillar-name">Sustain</h3>
+        <p class="pillar-goal">Embed adoption infrastructure so the system runs without constant specialist intervention.</p>
+        <ul class="pillar-actions">
+          <li>Monthly Super User Community of Practice</li>
+          <li>Epic integrated into New Staff Onboarding</li>
+          <li>Quarterly Adoption Scorecard to CMIO &amp; Directors</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PILLAR DEEP DIVES ══════════════════════════════════════ -->
+<section>
+  <div class="section">
+    <div class="section-label">Pillar Detail</div>
+    <h2 class="section-title">Intervention Actions &amp; Owners</h2>
+    <div class="divider"></div>
+
+    <!-- Stabilize timeline -->
+    <h3 style="font-size:1.15rem;color:var(--teal-700);margin-bottom:1.4rem;margin-top:1rem">🛡️ Stabilize — Days 1–30</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 1.1 · Days 1–7</div>
+        <div class="tl-title">Super User Reactivation Program</div>
+        <div class="tl-body">Negotiate a protected 4-hour/week schedule block for all super users — out of full patient assignment. Issue laminated "Quick Wins" tip cards covering the top 12 repeat ticket workflows.</div>
+        <div class="tl-chips">
+          <span class="chip chip-teal">Owner: Adoption Specialist + Nursing Manager</span>
+          <span class="chip chip-green">Metric: All 12 ED super users re-engaged in 7 days</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 1.2 · Days 1–10</div>
+        <div class="tl-title">At-the-Elbow Support Surge</div>
+        <div class="tl-body">10-day intensive ATE deployment in ED and Oncology. Adoption Specialist alternates day and evening shifts to observe real-time workflow gaps. Structured observation log captures recurring barriers.</div>
+        <div class="tl-chips">
+          <span class="chip chip-teal">Owner: Adoption Specialist + IT Help Desk</span>
+          <span class="chip chip-green">Metric: 25% reduction in repeat ticket categories by Day 10</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 1.3 · Days 3–14</div>
+        <div class="tl-title">Self-Service Knowledge Base</div>
+        <div class="tl-body">Department-branded Epic Quick Reference Library on the hospital intranet — organized by role and workflow (not Epic module name). Each article under 2 minutes to consume. Top 12 topics published first.</div>
+        <div class="tl-chips">
+          <span class="chip chip-teal">Owner: Adoption Specialist + IT Communications</span>
+          <span class="chip chip-amber">Metric: 200+ accesses in 30 days; 40% ticket reduction by Day 30</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reinforce timeline -->
+    <h3 style="font-size:1.15rem;color:var(--teal-700);margin:2.4rem 0 1.4rem">🔧 Reinforce — Days 15–45</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 2.1 · Days 15–45</div>
+        <div class="tl-title">Micro-Learning Sprint Series</div>
+        <div class="tl-body">Replace failed 8-hour block model with 5 targeted 20-minute sessions delivered at point-of-care during shift transitions (7:00–7:30 AM &amp; PM). Co-facilitated by Adoption Specialist and unit super user.</div>
+        <div class="tl-chips">
+          <span class="chip chip-teal">Owner: Adoption Specialist</span>
+          <span class="chip chip-green">Metric: 90% attendance; post-session competency ≥ 80%</span>
+        </div>
+      </div>
+
+      <!-- Session table -->
+      <div style="margin: 1rem 0 2rem;">
+        <div class="table-wrap">
+          <table class="sessions-table">
+            <thead><tr><th>#</th><th>Session Topic</th><th>Audience</th><th>Duration</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Multi-patient task management in Epic</td><td>RN</td><td>20 min</td></tr>
+              <tr><td>2</td><td>Order entry and verbal order workflows</td><td>MD / APP</td><td>20 min</td></tr>
+              <tr><td>3</td><td>ED-specific documentation templates</td><td>RN, MA</td><td>20 min</td></tr>
+              <tr><td>4</td><td>Discharge workflow and AVS generation</td><td>RN, Unit Clerk</td><td>20 min</td></tr>
+              <tr><td>5</td><td>Epic on mobile devices — tips &amp; tricks</td><td>All roles</td><td>20 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 2.2 · Days 15–60</div>
+        <div class="tl-title">Physician-Specific Engagement Program</div>
+        <div class="tl-body">
+          <strong>1:1 Optimization Sessions</strong> — 30 min private coaching, no group judgment. &nbsp;
+          <strong>Dragon/Voice Dictation</strong> — setup and workflow integration where licensed. &nbsp;
+          <strong>Physician Champions</strong> — identify 2–3 early-proficient physicians per department to model best practices for peers.
+        </div>
+        <div class="tl-chips">
+          <span class="chip chip-teal">Owner: Adoption Specialist + CMO + Medical Directors</span>
+          <span class="chip chip-indigo">Metric: Physician self-entry ≥ 85%; doc completion ≥ 80% by Day 60</span>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 2.3 · Days 15–45</div>
+        <div class="tl-title">Workaround Elimination Campaign</div>
+        <div class="tl-body">
+          Three-step protocol for every identified workaround:
+          <strong>1. Understand</strong> — interview staff to find the exact friction point (no shame).
+          <strong>2. Match</strong> — identify the Epic feature that solves the same need.
+          <strong>3. Demonstrate</strong> — side-by-side demo + 72-hour follow-up.
+        </div>
+        <div class="tl-chips">
+          <span class="chip chip-green">Metric: Zero paper med-rec workarounds in Oncology by Day 45</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optimize timeline -->
+    <h3 style="font-size:1.15rem;color:var(--teal-700);margin:2.4rem 0 1.4rem">⚡ Optimize — Days 30–75</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 3.1 · Days 30–60</div>
+        <div class="tl-title">Personalized Epic Workspace Optimization ("15-Minute Tune-Up")</div>
+        <div class="tl-body">Individualized sessions reviewing and optimizing each staff member's Epic environment. Targets: SmartPhrases &amp; order favorites for MDs; MAR preferences &amp; Storyboard layouts for RNs; scheduling workflows for MAs &amp; clerks.</div>
+        <div class="tl-chips">
+          <span class="chip chip-amber">Metric: Average doc time reduced ≥ 20% from baseline by Day 60</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 3.2 · Days 20–30 build, then biweekly</div>
+        <div class="tl-title">Data Feedback Loop for Managers</div>
+        <div class="tl-body">Biweekly adoption dashboard built in Epic reporting and shared with each department manager — showing doc completion times, provider order compliance, ticket trends, and template utilization by unit and role.</div>
+        <div class="tl-chips">
+          <span class="chip chip-teal">Owner: Adoption Specialist + IT Analytics</span>
+          <span class="chip chip-green">Metric: 2+ managers independently initiating staff adoption conversations by Day 60</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 3.3 · Days 30–75</div>
+        <div class="tl-title">Oncology Specialty Workflow Optimization Review</div>
+        <div class="tl-body">Structured review with Oncology nursing leadership and Epic build team to address chemotherapy protocols, complex care plans, and MDT notes. Top 5 friction workflows identified → proposed enhancements → build tickets → validated with frontline staff before rollout.</div>
+        <div class="tl-chips">
+          <span class="chip chip-indigo">Metric: ≥ 3 Oncology-specific enhancements implemented by Day 75</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sustain timeline -->
+    <h3 style="font-size:1.15rem;color:var(--teal-700);margin:2.4rem 0 1.4rem">🌱 Sustain — Days 60–90</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 4.1 · First meeting Day 60, then monthly</div>
+        <div class="tl-title">Super User Community of Practice</div>
+        <div class="tl-body">60-minute cross-departmental monthly forum for super users to share tips, escalate unsolved problems, and receive Epic enhancement updates. Creates horizontal knowledge flow and sustains super user identity beyond go-live.</div>
+        <div class="tl-chips">
+          <span class="chip chip-green">Metric: ≥ 70% super user attendance at first 3 CoP sessions</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 4.2 · Days 45–75</div>
+        <div class="tl-title">New Staff Onboarding Integration</div>
+        <div class="tl-body">Epic adoption training embedded into HR onboarding — not a separate optional event. Includes: pre-hire async e-learning, 4-hour live scenario-based training on Day 1 clinical orientation, super user floor walkthrough on Day 3, and 30-day Adoption Specialist check-in.</div>
+        <div class="tl-chips">
+          <span class="chip chip-amber">Metric: 100% of new hires completing all Epic onboarding touchpoints within 30 days</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Action 4.3 · Day 90, then quarterly</div>
+        <div class="tl-title">Adoption Scorecard &amp; Quarterly Leadership Review</div>
+        <div class="tl-body">Formal quarterly scorecard presented to Department Directors and the CMIO — consolidating compliance rates, ticket trends, documentation quality, training completion, and staff satisfaction scores. Transforms adoption from a one-time project into an ongoing operational discipline.</div>
+        <div class="tl-chips">
+          <span class="chip chip-teal">Owner: Adoption Specialist + Clinical Informatics + IT Analytics</span>
+          <span class="chip chip-green">Metric: All departments ≥ 75% compliance by Day 90</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STAKEHOLDERS ═══════════════════════════════════════════ -->
+<div class="bg-light" id="stakeholders">
+  <div class="section">
+    <div class="section-label">Stakeholder Communication Plan</div>
+    <h2 class="section-title">Right Message. Right Channel. Right Cadence.</h2>
+    <div class="divider"></div>
+    <p class="section-desc">Successful adoption is as much a communication challenge as a training one. Every stakeholder group has distinct concerns — and needs a tailored approach.</p>
+
+    <div class="table-wrap">
+      <table class="stakeholder-table">
+        <thead>
+          <tr>
+            <th>Stakeholder Group</th>
+            <th>Key Concerns</th>
+            <th>Communication Vehicle</th>
+            <th>Frequency</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Frontline Nurses</strong></td>
+            <td>Efficiency, workload, peer support</td>
+            <td>Unit huddles, tip cards, floor presence</td>
+            <td><span class="tag">Daily (first 30d)</span><span class="tag">Weekly thereafter</span></td>
+            <td>Adoption Specialist</td>
+          </tr>
+          <tr>
+            <td><strong>Attending Physicians</strong></td>
+            <td>Time, autonomy, clinical workflow fit</td>
+            <td>1:1 sessions, physician champion word-of-mouth</td>
+            <td><span class="tag">As-needed</span><span class="tag">Monthly update</span></td>
+            <td>Adoption Specialist + CMO</td>
+          </tr>
+          <tr>
+            <td><strong>Department Managers</strong></td>
+            <td>Team performance, accountability, escalation path</td>
+            <td>Biweekly dashboard review, brief email summary</td>
+            <td><span class="tag">Biweekly</span></td>
+            <td>Adoption Specialist</td>
+          </tr>
+          <tr>
+            <td><strong>IT Help Desk</strong></td>
+            <td>Ticket triage, escalation routing, knowledge base</td>
+            <td>Weekly sync meeting, shared ticket tracking</td>
+            <td><span class="tag">Weekly</span></td>
+            <td>Adoption Specialist + IT Lead</td>
+          </tr>
+          <tr>
+            <td><strong>Hospital Leadership / CMIO</strong></td>
+            <td>ROI, risk, adoption trajectory</td>
+            <td>Quarterly Adoption Scorecard</td>
+            <td><span class="tag">Quarterly</span></td>
+            <td>Adoption Specialist + Clinical Informatics Director</td>
+          </tr>
+          <tr>
+            <td><strong>Super Users</strong></td>
+            <td>Role clarity, schedule support, recognition</td>
+            <td>CoP meetings, direct communication channel</td>
+            <td><span class="tag">Monthly CoP</span><span class="tag">As-needed</span></td>
+            <td>Adoption Specialist</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Resistance archetypes -->
+    <div class="section-label" style="margin-top:3rem">Resistance Management</div>
+    <h3 style="font-size:1.5rem;color:var(--teal-900);margin-bottom:1.6rem">Treat Resistance as Information, Not Insubordination</h3>
+    <div class="archetypes">
+      <div class="archetype-card">
+        <div class="archetype-icon">🤨</div>
+        <div class="archetype-label">The Skeptic</div>
+        <div class="archetype-quote">"This system doesn't work for how we actually practice."</div>
+        <div class="archetype-strategy">The most credible response is action, not training. When a skeptic raises a legitimate concern, document it, escalate to the build team, and follow up with the outcome. Skeptics who see their feedback result in real system changes become the most powerful adoption advocates in the department.</div>
+      </div>
+      <div class="archetype-card">
+        <div class="archetype-icon">😓</div>
+        <div class="archetype-label">The Overwhelmed</div>
+        <div class="archetype-quote">"I don't have time to learn this right now."</div>
+        <div class="archetype-strategy">Respect the clinical load. Offer micro-sessions (10–15 min), bring training to staff during natural downtime (post-handoff, lunch), and make clear the goal is to make their day easier — not to add to it.</div>
+      </div>
+      <div class="archetype-card">
+        <div class="archetype-icon">📄</div>
+        <div class="archetype-label">The Workaround Defender</div>
+        <div class="archetype-quote">"My paper system is faster."</div>
+        <div class="archetype-strategy">Never argue with this perception — it may be accurate short-term. Instead, commit to making the Epic workflow faster than the paper alternative through workspace optimization and process redesign. Then deliver on that commitment.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ KPIs ════════════════════════════════════════════════════ -->
+<section id="kpis">
+  <div class="section">
+    <div class="section-label">Measurement &amp; Success Framework</div>
+    <h2 class="section-title">KPIs Measured at Days 30, 60, and 90</h2>
+    <div class="divider"></div>
+    <p class="section-desc">All adoption activities are tracked against concrete, time-bound targets — using Epic reporting, structured rounding, and quarterly staff surveys for triangulated evaluation.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">Overall Workflow Compliance Rate</div>
+          <div class="kpi-baseline">Baseline: 64%</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">70%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">78%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">85%</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:64%"></div></div>
+          <div class="kpi-goal">Target: 85%</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">ED Workflow Compliance</div>
+          <div class="kpi-baseline">Baseline: 47%</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">60%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">72%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">80%</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:47%;background:linear-gradient(90deg,var(--rose),var(--amber))"></div></div>
+          <div class="kpi-goal">Target: 80%</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">Oncology Workflow Compliance</div>
+          <div class="kpi-baseline">Baseline: 51%</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">63%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">74%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">82%</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:51%;background:linear-gradient(90deg,var(--rose),var(--amber))"></div></div>
+          <div class="kpi-goal">Target: 82%</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">Help Desk Ticket Volume (weekly avg)</div>
+          <div class="kpi-baseline">Baseline: 278 tickets/wk</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">167</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">111</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">≤ 83</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:100%;background:linear-gradient(90deg,var(--rose),var(--amber))"></div></div>
+          <div class="kpi-goal">Target: ≤ 83 tickets/week</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">Physician Order Self-Entry Rate</div>
+          <div class="kpi-baseline">Baseline: 58%</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">68%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">80%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">88%</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:58%;background:linear-gradient(90deg,var(--amber),var(--teal-400))"></div></div>
+          <div class="kpi-goal">Target: 88%</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">Staff Epic Satisfaction Score (1–5)</div>
+          <div class="kpi-baseline">Baseline: 2.4</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">2.9</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">3.4</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">≥ 3.8</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:48%;background:linear-gradient(90deg,var(--amber),var(--teal-400))"></div></div>
+          <div class="kpi-goal">Target: ≥ 3.8 / 5.0</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">Super User Active Participation Rate</div>
+          <div class="kpi-baseline">Baseline: 49%</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">80%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">90%</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">95%</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:49%;background:linear-gradient(90deg,var(--rose),var(--amber))"></div></div>
+          <div class="kpi-goal">Target: 95%</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <div class="kpi-name">Avg Doc Time — ED</div>
+          <div class="kpi-baseline">Baseline: 28 min/patient</div>
+        </div>
+        <div class="kpi-targets">
+          <div class="kpi-target"><div class="kpi-target-day">Day 30</div><div class="kpi-target-val">23 min</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 60</div><div class="kpi-target-val">19 min</div></div>
+          <div class="kpi-target"><div class="kpi-target-day">Day 90</div><div class="kpi-target-val">≤ 16 min</div></div>
+        </div>
+        <div class="kpi-progress">
+          <div class="kpi-track"><div class="kpi-fill" style="width:82%;background:linear-gradient(90deg,var(--rose),var(--amber))"></div></div>
+          <div class="kpi-goal">Target: ≤ 16 min</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evaluation methodology -->
+    <div style="margin-top:3rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;">
+      <div class="stat-card" style="text-align:left;">
+        <div style="font-size:1.8rem;margin-bottom:.5rem">📊</div>
+        <div style="font-weight:700;margin-bottom:.4rem">Quantitative Metrics</div>
+        <div style="font-size:.88rem;color:var(--slate-500)">Workflow compliance, doc times, help desk volumes, and order entry rates extracted biweekly from Epic reporting tools and the ITSM ticketing platform.</div>
+      </div>
+      <div class="stat-card" style="text-align:left;">
+        <div style="font-size:1.8rem;margin-bottom:.5rem">🚶</div>
+        <div style="font-weight:700;margin-bottom:.4rem">Structured Rounding</div>
+        <div style="font-size:.88rem;color:var(--slate-500)">Weekly 3–5 staff check-ins per unit using a standardized 5-question script to capture qualitative sentiment, new friction points, and suggestions.</div>
+      </div>
+      <div class="stat-card" style="text-align:left;">
+        <div style="font-size:1.8rem;margin-bottom:.5rem">📝</div>
+        <div style="font-weight:700;margin-bottom:.4rem">Quarterly Survey</div>
+        <div style="font-size:.88rem;color:var(--slate-500)">10-question user satisfaction survey distributed to all clinical staff at Days 30, 60, and 90 — tracking perceived usability, training adequacy, and system value.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BMC FIT ══════════════════════════════════════════════════ -->
+<div class="bg-dark" id="bmc">
+  <div class="section">
+    <div class="section-label">Applicability to Boston Medical Center</div>
+    <h2 class="section-title">Why This Approach Fits BMC</h2>
+    <div class="divider"></div>
+    <p class="section-desc">BMC operates as a safety-net hospital serving a high-complexity, high-vulnerability patient population. The clinical workflows — spanning inpatient, outpatient, behavioral health, and community health — demand an adoption approach built on four principles.</p>
+
+    <div class="align-grid">
+      <div class="align-card">
+        <div class="align-icon">⚖️</div>
+        <div class="align-title">Equity-Informed</div>
+        <div class="align-text">Staff serving underserved populations carry heavier administrative burdens. Every adoption intervention actively reduces — never adds to — that burden.</div>
+      </div>
+      <div class="align-card">
+        <div class="align-icon">🌍</div>
+        <div class="align-title">Culturally Humble</div>
+        <div class="align-text">BMC's diverse workforce requires role-appropriate, accessible training materials that avoid jargon assuming prior EHR familiarity.</div>
+      </div>
+      <div class="align-card">
+        <div class="align-icon">🏥</div>
+        <div class="align-title">Operationally Grounded</div>
+        <div class="align-text">Every training intervention is anchored in a real observed workflow — not a theoretical use case. Abstract training disconnected from patient care doesn't work.</div>
+      </div>
+      <div class="align-card">
+        <div class="align-icon">🤝</div>
+        <div class="align-title">Collaborative</div>
+        <div class="align-text">The Adoption Specialist role is a partnership function — with nursing, medicine, IT, informatics, and operations. No single person drives adoption alone.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:2.4rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius);padding:1.8rem 2rem;">
+      <p style="font-size:1.05rem;line-height:1.8;color:rgba(255,255,255,.85);font-style:italic;">
+        "The scenario described in this document mirrors the challenges BMC would face in any major system rollout, optimization initiative, or module expansion — and the framework presented here is directly transferable to those real-world contexts."
+      </p>
+      <p style="margin-top:.8rem;font-size:.85rem;color:var(--teal-300);font-weight:600;">— Alicia Paulson, Clinical Systems Adoption Specialist Candidate</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APPENDIX ═════════════════════════════════════════════════ -->
+<section id="appendix">
+  <div class="section">
+    <div class="section-label">Appendices</div>
+    <h2 class="section-title">Supporting Materials</h2>
+    <div class="divider"></div>
+
+    <div class="accordion">
+
+      <!-- Appendix A -->
+      <div class="acc-item open">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-title">📋 Appendix A — Super User Quick Reference Card: Top 12 Repeat Ticket Topics</span>
+          <span class="acc-icon">+</span>
+        </button>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <p style="font-size:.88rem;color:var(--slate-500);margin-bottom:1.2rem">Designed for laminated pocket card distribution to all super users.</p>
+            <div class="qr-grid">
+              <div class="qr-card"><div class="qr-num">Issue #1</div><div class="qr-issue">Patient not found in Epic</div><div class="qr-fix">Search by MRN, not name. Check "Include Discharged" filter.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #2</div><div class="qr-issue">Medication not in MAR</div><div class="qr-fix">Verify order was activated; check pharmacy verification status.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #3</div><div class="qr-issue">Unable to sign note</div><div class="qr-fix">Check for incomplete required fields (red asterisks); verify attending co-signature setup.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #4</div><div class="qr-issue">Lab results not showing</div><div class="qr-fix">Check collection date filter; labs may be in "Resulted" inbox if unacknowledged.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #5</div><div class="qr-issue">Discharge summary not generating</div><div class="qr-fix">Confirm all required encounter data fields complete; use Discharge Navigator.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #6</div><div class="qr-issue">Order not routing to pharmacy</div><div class="qr-fix">Verify order was "signed" not just "entered"; check department routing preferences.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #7</div><div class="qr-issue">Patient on wrong unit</div><div class="qr-fix">Census management — contact charge nurse or unit clerk for bed move in Epic.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #8</div><div class="qr-issue">Can't find a SmartForm/template</div><div class="qr-fix">Use Epic search bar (magnifying glass icon); check specialty-specific template library.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #9</div><div class="qr-issue">Dragon dictation not working</div><div class="qr-fix">Check microphone input device; Dragon service may need restart — contact IT.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #10</div><div class="qr-issue">Duplicate patient record</div><div class="qr-fix">Do NOT merge — flag immediately to Health Information Management (HIM).</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #11</div><div class="qr-issue">After Visit Summary not printing</div><div class="qr-fix">Check printer assignment in workstation settings; use Print Preview first.</div></div>
+              <div class="qr-card"><div class="qr-num">Issue #12</div><div class="qr-issue">"No Access" error on patient</div><div class="qr-fix">Verify patient is on your assigned panel/unit; may require Break-the-Glass access with documented justification.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appendix B -->
+      <div class="acc-item">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-title">📋 Appendix B — 30-Day At-the-Elbow Observation Log Template</span>
+          <span class="acc-icon">+</span>
+        </button>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <p style="font-size:.88rem;color:var(--slate-500);margin-bottom:1.2rem">Structured log capturing recurring barriers for root cause trending.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th><th>Department</th><th>Shift</th><th>Staff Role</th>
+                    <th>Issue Observed</th><th>Epic Feature/Gap</th><th>Resolution Provided</th><th>Follow-Up?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MM/DD/YY</td><td>ED</td><td>Day</td><td>RN</td>
+                    <td>Unable to chart in multi-patient view</td>
+                    <td>Storyboard layout</td>
+                    <td>Demonstrated split-screen workflow</td>
+                    <td>No</td>
+                  </tr>
+                  <tr>
+                    <td>MM/DD/YY</td><td>Oncology</td><td>Evening</td><td>RN</td>
+                    <td>Paper med rec sheet in use</td>
+                    <td>Medication Reconciliation SmartForm</td>
+                    <td>Side-by-side demo; follow-up scheduled</td>
+                    <td>Yes — Day 3</td>
+                  </tr>
+                  <tr>
+                    <td colspan="8" style="text-align:center;color:var(--slate-400);font-style:italic;font-size:.85rem;">(Log continues...)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appendix C -->
+      <div class="acc-item">
+        <button class="acc-header" onclick="toggleAcc(this)">
+          <span class="acc-title">📋 Appendix C — Staff Satisfaction Survey (Quarterly, 10 Questions)</span>
+          <span class="acc-icon">+</span>
+        </button>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <p style="font-size:.88rem;color:var(--slate-500);margin-bottom:1.2rem">Scale: 1 (Strongly Disagree) — 5 (Strongly Agree). Distributed at Days 30, 60, and 90.</p>
+            <div class="survey-grid">
+              <div class="survey-item"><div class="survey-q-num">1</div><div class="survey-q-text">I feel confident using Epic for my primary daily tasks.</div></div>
+              <div class="survey-item"><div class="survey-q-num">2</div><div class="survey-q-text">The training I received prepared me adequately for my role in Epic.</div></div>
+              <div class="survey-item"><div class="survey-q-num">3</div><div class="survey-q-text">I know who to contact when I have an Epic question or problem.</div></div>
+              <div class="survey-item"><div class="survey-q-num">4</div><div class="survey-q-text">Using Epic helps me provide better care to my patients.</div></div>
+              <div class="survey-item"><div class="survey-q-num">5</div><div class="survey-q-text">My documentation time in Epic has improved compared to when we first went live.</div></div>
+              <div class="survey-item"><div class="survey-q-num">6</div><div class="survey-q-text">My super user is accessible and helpful when I have questions.</div></div>
+              <div class="survey-item"><div class="survey-q-num">7</div><div class="survey-q-text">I have received enough follow-up support since go-live.</div></div>
+              <div class="survey-item"><div class="survey-q-num">8</div><div class="survey-q-text">System issues or slowdowns rarely interfere with my patient care workflow.</div></div>
+              <div class="survey-item"><div class="survey-q-num">9</div><div class="survey-q-text">I feel my feedback about Epic has been heard and acted on.</div></div>
+              <div class="survey-item"><div class="survey-q-num">10</div><div class="survey-q-text">Overall, I am satisfied with how Epic has been implemented in my department.</div></div>
+            </div>
+            <div style="margin-top:1.2rem;background:var(--teal-50);border-radius:10px;padding:1rem 1.2rem;font-size:.88rem;color:var(--slate-600);">
+              <strong>Open-Ended (Optional):</strong> "What is the one thing that would most improve your experience using Epic?"
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion -->
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════════ -->
+<footer>
+  <p>Prepared April 2026 &nbsp;·&nbsp; <strong>Alicia Paulson</strong> &nbsp;·&nbsp; Clinical Systems Adoption Specialist Candidate</p>
+  <p style="margin-top:.4rem;font-size:.78rem;">Fictional scenario for work sample purposes only &nbsp;·&nbsp; Boston Medical Center</p>
+</footer>
+
+<script>
+  function toggleAcc(btn) {
+    const item = btn.closest('.acc-item');
+    item.classList.toggle('open');
+  }
+
+  // Animate bars on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.bar-fill, .kpi-fill').forEach(bar => {
+          const w = bar.style.width;
+          bar.style.width = '0';
+          requestAnimationFrame(() => {
+            setTimeout(() => { bar.style.width = w; }, 80);
+          });
+        });
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.table-wrap, .kpi-card').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
